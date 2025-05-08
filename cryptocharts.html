@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Coins</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Crypto Coins</h1>
+    <table id="coins-table">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Market Cap</th>
+                <th>Volume (24h)</th>
+            </tr>
+        </thead>
+        <tbody id="coins-tbody"></tbody>
+    </table>
+    <button id="prev-button" style="display: none;">Previous</button>
+    <button id="next-button">Next</button>
+    <div id="error-message" style="color: red;"></div>
+
+    <script>
+        let page = 1;
+        const coinsPerPage = 10;
+        let loading = false;
+
+        async function fetchCoins() {
+            try {
+                const proxyUrl = 'https://api.allorigins.win/raw?url=';
+                const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${coinsPerPage}&page=${page}&sparkline=false`;
+                const response = await fetch(`${proxyUrl}${encodeURIComponent(url)}`, {
+                    mode: 'cors'
+                });
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch data: ${response.status}`);
+                }
+                const data = await response.json();
+                if (!Array.isArray(data)) {
+                    throw new Error('Invalid response data');
+                }
+                return data;
+            } catch (error) {
+                document.getElementById('error-message').innerText = `Error: ${error.message}`;
+                console.error('Error fetching coins:', error);
+                return [];
+            }
+        }
+
+        async function renderCoins() {
+            if (loading) return;
+            loading = true;
+            const tbody = document.getElementById('coins-tbody');
+            tbody.innerHTML = '';
+            document.getElementById('error-message').innerText = '';
+            try {
+                const coins = await fetchCoins();
+                if (coins.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5">No data available</td></tr>';
+                } else {
+                    coins.forEach((coin, index) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${(page - 1) * coinsPerPage + index + 1}</td>
+                            <td>${coin.name}</td>
+                            <td>$${coin.current_price.toLocaleString()}</td>
+                            <td>$${coin.market_cap.toLocaleString()}</td>
+                            <td>$${coin.total_volume.toLocaleString()}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
+                document.getElementById('prev-button').style.display = page > 1 ? 'inline-block' : 'none';
+            } catch (error) {
+                console.error('Error rendering coins:', error);
+            } finally {
+                loading = false;
+            }
+        }
+
+        document.getElementById('next-button').addEventListener('click', async () => {
+            page++;
+            await renderCoins();
+        });
+
+        document.getElementById('prev-button').addEventListener('click', async () => {
+            if (page > 1) {
+                page--;
+                await renderCoins();
+            }
+        });
+
+        renderCoins();
+    </script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+* {
+  font-family: Source Sans Pro, sans-serif;
+  outline: none;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #f0f0f0;
+}
+
+.wrapper {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.wrapper h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 32px;
+}
+
+.wrapper form {
+  display: flex;
+  flex-direction: column;
+}
+
+.wrapper label {
+  margin-bottom: 10px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.wrapper input[type="email"],
+.wrapper input[type="password"] {
+  padding: 10px;
+  margin-bottom: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.wrapper input[type="email"].error,
+.wrapper input[type="password"].error {
+  border: 1px solid #ff3737;
+}
+
+.wrapper button[type="submit"] {
+  background-color: #64acff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.wrapper button[type="submit"]:hover {
+  background-color: #73b1fa;
+}
+
+p {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+p a {
+  color: #64acff;
+  text-decoration: none;
+}
+
+p a:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  color: #ff3737;
+  font-size: 12px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
